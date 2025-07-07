@@ -1,1 +1,282 @@
-<p>todos works!</p>
+<div
+  class="min-h-screen w-full flex flex-col items-center justify-center bg-gray-800 p-0"
+>
+  <div
+    class="w-full max-w-7xl bg-gray-700 shadow-2xl rounded-2xl p-0 sm:p-0 border border-gray-900 flex flex-col items-center"
+  >
+    <h2
+      class="text-4xl font-extrabold mb-8 mt-10 text-center text-white tracking-wide drop-shadow-lg"
+    >
+      Tasks
+    </h2>
+
+    <!-- Add new todo (modal trigger) -->
+    <div class="flex flex-col sm:flex-row gap-2 mb-10 w-full px-8">
+      <button
+        (click)="openAddModal()"
+        class="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-bold px-8 py-3 rounded-lg shadow-lg transition duration-200 w-full sm:w-auto"
+      >
+        Add New Task
+      </button>
+    </div>
+
+    <!-- Add Todo Modal -->
+    <div
+      *ngIf="showAddModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
+    >
+      <div
+        class="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-700 relative"
+      >
+        <button
+          (click)="closeAddModal()"
+          class="absolute top-3 right-3 text-gray-400 hover:text-white text-2xl font-bold"
+        >
+          &times;
+        </button>
+        <h3 class="text-2xl font-bold text-white mb-6 text-center">
+          Add New Task
+        </h3>
+        <form (ngSubmit)="addTodo()" autocomplete="off">
+          <div class="mb-4">
+            <label class="block text-gray-300 mb-2" for="newTodoTitle"
+              >Title</label
+            >
+            <input
+              id="newTodoTitle"
+              [(ngModel)]="newTodoTitle"
+              name="newTodoTitle"
+              placeholder="Todo title"
+              class="border border-gray-600 bg-gray-900 text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-900 rounded px-4 py-2 w-full transition duration-200 outline-none shadow-inner placeholder-gray-400"
+            />
+          </div>
+          <div class="mb-4 flex items-center gap-2">
+            <input
+              id="newTodoIsDone"
+              type="checkbox"
+              [(ngModel)]="newTodoIsDone"
+              name="newTodoIsDone"
+              class="accent-blue-500 w-5 h-5"
+            />
+            <label for="newTodoIsDone" class="text-gray-300">Is Done</label>
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-300 mb-2" for="newTodoUserId"
+              >User ID</label
+            >
+            <input
+              id="newTodoUserId"
+              [(ngModel)]="newTodoUserId"
+              name="newTodoUserId"
+              placeholder="User ID"
+              disabled
+              class="border border-gray-600 bg-gray-900 text-gray-400 cursor-not-allowed focus:border-blue-400 focus:ring-2 focus:ring-blue-900 rounded px-4 py-2 w-full transition duration-200 outline-none shadow-inner placeholder-gray-400"
+            />
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2" for="newTodoCreatedAt"
+              >Created At</label
+            >
+            <input
+              id="newTodoCreatedAt"
+              [(ngModel)]="newTodoCreatedAt"
+              name="newTodoCreatedAt"
+              type="datetime-local"
+              class="border border-gray-600 bg-gray-900 text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-900 rounded px-4 py-2 w-full transition duration-200 outline-none shadow-inner placeholder-gray-400"
+            />
+          </div>
+          <button
+            type="submit"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-8 py-3 rounded-lg shadow-lg transition duration-200 w-full"
+          >
+            Add Task
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto rounded-lg shadow-lg w-full px-4 pb-10">
+      <table class="w-full text-left border-collapse bg-gray-800 text-white">
+        <thead>
+          <tr class="bg-gray-900 text-md text-blue-300">
+            <th class="py-4 px-4 border-b border-gray-700">Title</th>
+            <th class="py-4 px-4 border-b border-gray-700">Status</th>
+            <th class="py-4 px-4 border-b border-gray-700">User ID</th>
+            <th class="py-4 px-4 border-b border-gray-700">Created At</th>
+            <th class="py-4 px-4 border-b border-gray-700 w-48">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let todo of todos"
+            class="border-b border-gray-700 hover:bg-gray-700 transition"
+          >
+            <!-- Title -->
+            <td class="py-3 px-4 align-middle">
+              <div *ngIf="editTodoId !== todo.id">{{ todo.title }}</div>
+              <input
+                *ngIf="editTodoId === todo.id"
+                [(ngModel)]="editTitle"
+                class="border border-blue-400 bg-gray-900 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-900 rounded px-2 py-2 w-full transition duration-200 outline-none shadow-inner placeholder-gray-400"
+              />
+            </td>
+            <!-- Status -->
+            <td class="py-3 px-4 align-middle text-center">
+              <span
+                *ngIf="editTodoId !== todo.id"
+                [ngClass]="{'text-green-400 font-bold': todo.is_done, 'text-gray-500': !todo.is_done}"
+              >
+                {{ todo.is_done ? '✔️' : '❌' }}
+              </span>
+              <input
+                *ngIf="editTodoId === todo.id"
+                type="checkbox"
+                [(ngModel)]="editIsDone"
+                class="accent-blue-500 w-6 h-6"
+              />
+            </td>
+            <!-- User ID -->
+            <td class="py-3 px-4 align-middle text-xs text-blue-200">
+              {{ todo.user_id }}
+            </td>
+            <!-- Created At -->
+            <td class="py-3 px-4 align-middle text-xs text-blue-200">
+              {{ todo.created_at | date:'short' }}
+            </td>
+            <!-- Actions -->
+            <td class="py-3 px-4 align-middle flex flex-wrap gap-2">
+              <button
+                (click)="editTodo(todo)"
+                class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow text-xs font-bold transition"
+              >
+                Edit
+              </button>
+              <!-- Edit Todo Modal -->
+              <div
+                *ngIf="showEditModal"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
+              >
+                <div
+                  class="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-700 relative"
+                >
+                  <button
+                    (click)="closeEditModal()"
+                    class="cursor-pointer absolute top-3 right-3 text-gray-400 hover:text-white text-2xl font-bold"
+                  >
+                    &times;
+                  </button>
+                  <h3 class="text-2xl font-bold text-white mb-6 text-center">
+                    Edit Task
+                  </h3>
+                  <form (ngSubmit)="saveEdit()" autocomplete="off">
+                    <div class="mb-4">
+                      <label class="block text-gray-300 mb-2" for="editTitle"
+                        >Title</label
+                      >
+                      <input
+                        id="editTitle"
+                        [(ngModel)]="editTitle"
+                        name="editTitle"
+                        placeholder="Todo title"
+                        class="border border-gray-600 bg-gray-900 text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-900 rounded px-4 py-2 w-full transition duration-200 outline-none shadow-inner placeholder-gray-400"
+                      />
+                    </div>
+                    <div class="mb-4 flex items-center gap-2">
+                      <input
+                        id="editIsDone"
+                        type="checkbox"
+                        [(ngModel)]="editIsDone"
+                        name="editIsDone"
+                        class="accent-blue-500 w-5 h-5"
+                      />
+                      <label for="editIsDone" class="text-gray-300"
+                        >Is Done</label
+                      >
+                    </div>
+                    <div class="mb-4">
+                      <label class="block text-gray-300 mb-2" for="editUserId"
+                        >User ID</label
+                      >
+                      <input
+                        id="editUserId"
+                        [(ngModel)]="editUserId"
+                        name="editUserId"
+                        placeholder="User ID"
+                        disabled
+                        class="border border-gray-600 bg-gray-900 text-gray-400 cursor-not-allowed focus:border-blue-400 focus:ring-2 focus:ring-blue-900 rounded px-4 py-2 w-full transition duration-200 outline-none shadow-inner placeholder-gray-400"
+                      />
+                    </div>
+                    <div class="mb-6">
+                      <label
+                        class="block text-gray-300 mb-2"
+                        for="editCreatedAt"
+                        >Created At</label
+                      >
+                      <input
+                        id="editCreatedAt"
+                        [(ngModel)]="editCreatedAt"
+                        name="editCreatedAt"
+                        type="datetime-local"
+                        disabled
+                        class="border border-gray-600 bg-gray-900 text-gray-400 cursor-not-allowed focus:border-blue-400 focus:ring-2 focus:ring-blue-900 rounded px-4 py-2 w-full transition duration-200 outline-none shadow-inner placeholder-gray-400"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      class="cursor-pointer bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-3 rounded-lg shadow-lg transition duration-200 w-full"
+                    >
+                      Save Changes
+                    </button>
+                  </form>
+                </div>
+              </div>
+              <button
+                (click)="confirmDelete(todo)"
+                class="cursor-pointer bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow text-xs font-bold transition"
+              >
+                Delete
+              </button>
+              <!-- Delete Confirmation Modal -->
+              <div
+                *ngIf="showDeleteModal"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
+              >
+                <div
+                  class="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-sm border border-gray-700 relative flex flex-col items-center"
+                >
+                  <button
+                    (click)="closeDeleteModal()"
+                    class="cursor-pointer absolute top-3 right-3 text-gray-400 hover:text-white text-2xl font-bold"
+                  >
+                    &times;
+                  </button>
+                  <h3 class="text-2xl font-bold text-white mb-4 text-center">
+                    Delete Task
+                  </h3>
+                  <p class="text-gray-300 mb-6 text-center">
+                    Are you sure you want to delete this Task?
+                  </p>
+                  <div class="flex gap-4 w-full">
+                    <button
+                      (click)="deleteTodoConfirmed()"
+                      class="cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg transition duration-200 w-full"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      (click)="closeDeleteModal()"
+                      class="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg transition duration-200 w-full"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

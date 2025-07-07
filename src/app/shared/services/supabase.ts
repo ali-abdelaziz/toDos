@@ -27,15 +27,15 @@ export class SupabaseService {
     return this.supabase.from('todos').select('*');
   }
 
-  addTodo(title: string) {
-    return this.supabase.from('todos').insert({ title });
+  addTodo(todo: { title: string; is_done: boolean; user_id: string; created_at: string }) {
+    return this.supabase.from('todos').insert([todo]);
   }
 
   deleteTodo(id: number) {
     return this.supabase.from('todos').delete().eq('id', id);
   }
 
-  updateTodo(id: number, title: string) {
-    return this.supabase.from('todos').update({ title }).eq('id', id);
+  updateTodo(id: number, title: string, is_done: boolean) {
+    return this.supabase.from('todos').update({ title, is_done }).eq('id', id);
   }
 }
