@@ -1,25 +1,36 @@
-<div
-  class="flex flex-col items-center justify-center h-screen bg-gray-900 text-white text-center px-4"
->
-  <h1 class="text-5xl font-extrabold tracking-wide">Welcome to toDos</h1>
-  <p class="text-xl mt-2 text-gray-400">
-    Your one-stop solution for task management.
-  </p>
-  <p class="text-md text-gray-400 mt-1">
-    Get started by adding your first task!
-  </p>
-  <a
-    routerLink="/login"
-    class="mt-6 px-6 py-3 text-lg bg-blue-500 rounded-lg hover:bg-blue-600 transition shadow-lg"
-    >Get Started</a
+<nav class="p-4 bg-gray-800 text-white flex justify-between">
+  <div class="font-bold text-lg cursor-pointer hover:text-gray-400">toDos</div>
+  <button
+    class="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 cursor-pointer"
+    (click)="goToLogin()"
   >
-  <div class="mt-8 flex items-center gap-4">
-    <a routerLink="/" class="text-gray-400 hover:text-white transition"
-      >Need help?</a
+    Login
+  </button>
+</nav>
+<section class="h-screen flex items-center justify-center">
+  <div
+    class="flex flex-col items-center justify-center w-full h-screen bg-gray-700 text-white text-center px-4"
+  >
+    <h1 class="text-5xl font-extrabold tracking-wide">Welcome to toDos</h1>
+    <p class="text-xl mt-2 text-gray-400">
+      Your one-stop solution for task management.
+    </p>
+    <p class="text-md text-gray-400 mt-1">
+      Get started by adding your first task!
+    </p>
+    <a
+      routerLink="/login"
+      class="mt-6 px-6 py-3 text-lg bg-blue-500 rounded-lg hover:bg-blue-600 transition shadow-lg"
+      >Get Started</a
     >
-    <span class="h-4 w-[1px] bg-gray-600"></span>
-    <a routerLink="/" class="text-gray-400 hover:text-white transition"
-      >Contact Support</a
-    >
+    <div class="mt-8 flex items-center gap-4">
+      <a routerLink="/" class="text-gray-400 hover:text-white transition"
+        >Need help?</a
+      >
+      <span class="h-4 w-[1px] bg-gray-600"></span>
+      <a routerLink="/" class="text-gray-400 hover:text-white transition"
+        >Contact Support</a
+      >
+    </div>
   </div>
-</div>
+</section>
